@@ -69,3 +69,14 @@ vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"}, {
     command = "set filetype=glsl"
 })
 
+vim.diagnostic.config({
+  underline = true,
+  virtual_text = false,
+  signs = true,
+  float = {
+    border = "rounded",
+    source = "always",
+  },
+  update_in_insert = false,
+})
+

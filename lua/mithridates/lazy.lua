@@ -111,7 +111,7 @@ require("lazy").setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'python', 'cpp', 'glsl'},
+      ensure_installed = { 'rust', 'bash', 'typescript', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'python', 'cpp', 'glsl'},
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -240,6 +240,7 @@ require("lazy").setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
+  { 'simrat39/rust-tools.nvim' },
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -288,9 +289,18 @@ require("lazy").setup({
       --    function will be executed to configure the current buffer
       local lspconfig = require('lspconfig')
       lspconfig.clangd.setup({
-        cmd = { "clangd" }, -- Adjust if clangd isn't in PATH
+        cmd = { 
+          "clangd",
+          "--compile-commands-dir=build",
+          "--extra-arg=-I/opt/homebrew/Cellar/open-mpi/5.0.7/include",
+          "--pch-storage=memory"
+        },
         filetypes = { "c", "cpp", "objc", "objcpp" },
         root_dir = lspconfig.util.root_pattern("compile_commands.json", ".git") or vim.loop.cwd,
+      })
+      lspconfig.ts_ls.setup({
+        cmd = { "typescript-language-server", "--stdio" },
+        filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
       })
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
@@ -331,7 +341,7 @@ require("lazy").setup({
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
-          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map('<leader>ön', vim.lsp.buf.rename, '[R]e[n]ame')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
